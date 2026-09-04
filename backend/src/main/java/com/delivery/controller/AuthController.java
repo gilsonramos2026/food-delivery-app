@@ -12,6 +12,7 @@ import com.delivery.dto.response.UserResponseDTO;
 // Infraestrutura, Segurança e Domínio
 import com.delivery.exception.BusinessException;
 import com.delivery.model.User;
+import com.delivery.model.enums.Role;
 import com.delivery.repository.UserRepository;
 import com.delivery.security.JwtService;
 import com.delivery.service.UserService;
@@ -56,7 +57,7 @@ public class AuthController {
     }
 
     @PostMapping("/verificar")
-    @Operation(summary = "Verificar código e logar", description = "Valida o código OTP enviado. Se o usuário existir, retorna o token JWT para acesso à API.")
+    @Operation(summary = "Verificar código e logar", description = "Valida o código OTP enviado. Se o usuário não existir, cria automaticamente como CLIENT e retorna o token JWT.")
     public ResponseEntity<LoginResponseDTO> verifyCode(@Valid @RequestBody VerifyCodeRequestDTO request) {
         boolean isValid = verificationService.verifyCode(request.getPhone(), request.getCode());
 
@@ -64,16 +65,19 @@ public class AuthController {
             throw new BusinessException("Código de verificação incorreto.");
         }
 
+        // FLUXO COMPLETO: Busca o usuário ou cria automaticamente caso seja o primeiro acesso
         User user = userRepository.findByPhone(request.getPhone())
-                .orElseThrow(() -> new BusinessException("Usuário não cadastrado com este telefone. Crie sua conta primeiro."));
+                .orElseGet(() -> {
+                    User newUser = User.builder()
+                            .phone(request.getPhone())
+                            .name("Novo Usuário")
+                            .email(request.getPhone() + "@delivery.com")
+                            .role(Role.CLIENT) // Nasce sempre com papel de CLIENTE
+                            .build();
+                    return userRepository.save(newUser);
+                });
 
         String token = jwtService.generateToken(user.getPhone(), user.getRole().name());
         return ResponseEntity.ok(new LoginResponseDTO(token));
-    }
-
-    @PostMapping("/cadastrar")
-    @Operation(summary = "Criar nova conta (Sign Up)", description = "Cadastra um novo cliente no sistema. Por padrão, todo usuário nasce com o papel de CLIENTE.")
-    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));
     }
 }

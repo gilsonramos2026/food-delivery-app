@@ -1,13 +1,13 @@
 package com.delivery.service.impl;
 
-import com.delivery.dto.request.UserRequestDTO;
-import com.delivery.dto.response.UserResponseDTO;
 import com.delivery.exception.BusinessException;
 import com.delivery.exception.ResourceNotFoundException;
 import com.delivery.mapper.UserMapper;
+import com.delivery.dto.request.UserRequestDTO;
+import com.delivery.dto.response.UserResponseDTO;
 import com.delivery.model.User;
 import com.delivery.model.enums.Role;
-import com.delivery.repository.UserRepository; // Verifique se seu repository está nessa pasta
+import com.delivery.repository.UserRepository;
 import com.delivery.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,12 +32,14 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByPhone(dto.getPhone()).isPresent()) {
             throw new BusinessException("Telefone já cadastrado no sistema.");
         }
-        if (userRepository.existsByEmail(dto.getEmail())) { // Adicione existsByEmail no seu UserRepository se necessário
+        if (dto.getEmail() != null && userRepository.existsByEmail(dto.getEmail())) {
             throw new BusinessException("E-mail já cadastrado no sistema.");
         }
 
         User user = UserMapper.toEntity(dto);
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        if (user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
 
         return UserMapper.toResponseDTO(userRepository.save(user));
     }
@@ -60,4 +62,3 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponseDTO(userRepository.save(user));
     }
 }
-

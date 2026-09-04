@@ -24,12 +24,11 @@ public class UserMapper {
         }
         return UserResponseDTO.builder()
                 .id(entity.getId())
-                .name(entity.getName())
-                .email(entity.getEmail())
+                .name(entity.getName()) // Pode ir nulo no primeiro login
+                .email(entity.getEmail()) // Vai o placeholder temporário
                 .phone(entity.getPhone())
                 .role(entity.getRole() != null ? entity.getRole().name() : null)
                 .createdAt(entity.getCreatedAt())
                 .build();
     }
 }
-

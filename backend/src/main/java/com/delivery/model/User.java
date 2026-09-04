@@ -23,24 +23,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório")
     @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
-    @Column(nullable = false, length = 100)
+    @Column(length = 100) // Removido o nullable = false para permitir criação automática apenas com telefone
     private String name;
 
-    @NotBlank(message = "O e-mail é obrigatório")
     @Email(message = "Formato de e-mail inválido")
-    @Column(nullable = false, unique = true, length = 180)
+    @Column(unique = true, length = 180) // Removido o nullable = false para o primeiro login
     private String email;
 
-    @NotBlank(message = "A senha é obrigatória")
     @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
-    @Column(nullable = false)
+    @Column // Senha torna-se opcional já que a autenticação principal será por código OTP
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @NotBlank(message = "O telefone é obrigatório")
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true, length = 20) // Telefone continua estrito e obrigatório
     private String phone;
 
     @Enumerated(EnumType.STRING)
