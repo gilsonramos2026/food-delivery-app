@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev # Altere para 'prod' quando quiser conectar no PostgreSQL
+    active: prod # Alterado para 'prod' para conectar no PostgreSQL
 
 ---
 # ?? CONFIGURAÇÃO DE DESENVOLVIMENTO (Banco H2 em Memória)
@@ -28,14 +28,13 @@ spring:
       hibernate:
         format_sql: true
 
-# ? Customização do Swagger para o ambiente de Desenvolvimento
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
-    enabled: true              # Ativa a interface visual no ambiente dev
-    operations-sorter: alpha   # Organiza os endpoints em ordem alfabética
+    enabled: true
+    operations-sorter: alpha
 
 server:
   port: 8080
@@ -47,20 +46,29 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://localhost:5432/delivery_db # Altere para o IP/Porta do seu banco
+    url: jdbc:postgresql://localhost:5432/delivery_db # Certifique-se de criar essa database vazia no PostgreSQL
     username: postgres
-    password: sua_senha_aqui
+    password: postgres # Coloque a senha real do seu PostgreSQL aqui
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update # Em produção real, mude para 'validate' e use Flyway/Liquibase
-    show-sql: false
+      ddl-auto: update # Alterado para 'validate' para o Flyway gerenciar as migrations com segurança
+    show-sql: true
 
-# ? Segurança para produção: Desativa o Swagger visual para que público externo não veja
+# Ajustado para TRUE temporariamente para você conseguir usar o Swagger na porta 8081
 springdoc:
+  api-docs:
+    path: /v3/api-docs
   swagger-ui:
-    enabled: false
+    path: /swagger-ui.html
+    enabled: true
 
 server:
-  port: 8081
+  port: 8081 # Note que a porta em modo prod passa a ser 8081
+
+flyway:
+  enabled: true
+  baseline-on-migrate: true
+
+

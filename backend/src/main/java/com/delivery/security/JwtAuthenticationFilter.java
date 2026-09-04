@@ -44,10 +44,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String role = jwtService.extractRole(jwt);
 
                 if (jwtService.isTokenValid(jwt, userPhone)) {
+                    // Garante o prefixo ROLE_ exigido pelo hasRole do Spring Security
+                    String authority = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userPhone,
                             null,
-                            Collections.singletonList(new SimpleGrantedAuthority(role))
+                            Collections.singletonList(new SimpleGrantedAuthority(authority))
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
@@ -60,3 +63,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+
