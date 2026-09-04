@@ -2,6 +2,7 @@ package com.delivery.service.impl;
 
 import com.delivery.exception.BusinessException;
 import com.delivery.model.VerificationCode;
+import com.delivery.repository.VerificationCodeRepository;
 import com.delivery.service.VerificationCodeService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
