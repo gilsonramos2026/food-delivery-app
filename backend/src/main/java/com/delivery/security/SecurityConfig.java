@@ -51,6 +51,9 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         // Protege todos os outros endpoints privados do sistema (como POST/PUT/DELETE de admin)
                         .anyRequest().authenticated()
+                        // Dentro do requestMatchers do seu SecurityConfig:
+                        .requestMatchers("/payments/webhook").permitAll()
+
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

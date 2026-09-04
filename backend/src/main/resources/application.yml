@@ -71,4 +71,9 @@ flyway:
   enabled: true
   baseline-on-migrate: true
 
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY:sk_test_sua_chave_aqui}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_seu_segredo_aqui}
+
+
 
