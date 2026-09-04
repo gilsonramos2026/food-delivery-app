@@ -69,4 +69,18 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status).body(error);
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(InvalidStatusTransitionException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidStatusTransition(InvalidStatusTransitionException e, jakarta.servlet.http.HttpServletRequest request) {
+        org.springframework.http.HttpStatus status = org.springframework.http.HttpStatus.BAD_REQUEST;
+        ErrorResponseDTO error = ErrorResponseDTO.builder()
+                .timestamp(java.time.Instant.now())
+                .status(status.value())
+                .error("Transição de status inválida")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(status).body(error);
+    }
+
 }
