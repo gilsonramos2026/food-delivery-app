@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  /* Tokens de Design globais */
+  --font-sans: 'Inter', sans-serif;
+  
+  /* Sistema de Cores Nomeadas Dinâmicas */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-bg-app: var(--bg-app);
+  --color-text-main: var(--text-main);
+  
+  /* Efeito Visual: Faixa Xadrez de Lanchonete */
+  --background-image-checkerboard: repeating-conic-gradient(var(--bg-checker) 0% 25%, transparent 0% 50%) 50% / 20px 20px;
+  
+  /* Animação de Transição Suave */
+  --animate-fade-in: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ☀️ TEMA CLARO (Padrão) */
+:root {
+  --brand-primary: #ff4500;      /* Laranja Pizzaria */
+  --brand-secondary: #22c55e;    /* Verde Sucesso */
+  --bg-app: #f9fafb;             /* Cinza bem claro */
+  --text-main: #111827;          /* Cinza escuro */
+  --bg-checker: #e5e7eb;         /* Detalhe do xadrez claro */
+}
+
+/* 🌙 TEMA ESCURO (Ativado via classe ou preferência do sistema) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-primary: #ff5722;
+    --brand-secondary: #4caf50;
+    --bg-app: #111827;           /* Fundo Escuro */
+    --text-main: #f9fafb;         /* Texto Claro */
+    --bg-checker: #1f2937;       /* Detalhe do xadrez escuro */
+  }
+}
