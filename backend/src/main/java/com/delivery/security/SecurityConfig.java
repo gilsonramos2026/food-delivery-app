@@ -40,20 +40,28 @@ public class SecurityConfig {
                                 "/swagger-ui/index.html",
                                 "/webjars/**"
                         ).permitAll()
+
                         // Garante que os endpoints de leitura do cardápio sejam públicos
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/categories/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/products/**").permitAll()
+
                         // Libera o acesso público às imagens salvas no diretório de uploads
                         .requestMatchers("/uploads/**").permitAll()
+
                         // Garante que TODOS os endpoints de autenticação fiquem 100% públicos
                         .requestMatchers("/auth/**").permitAll()
-                        // Libera o Console do H2 localmente
-                        .requestMatchers("/h2-console/**").permitAll()
-                        // Protege todos os outros endpoints privados do sistema (como POST/PUT/DELETE de admin)
-                        .anyRequest().authenticated()
-                        // Dentro do requestMatchers do seu SecurityConfig:
+
+                        // Libera as conexões do WebSocket para chat e GPS em tempo real
+                        .requestMatchers("/ws-delivery/**").permitAll()
+
+                        // Webhook de pagamentos do Stripe
                         .requestMatchers("/payments/webhook").permitAll()
 
+                        // Libera o Console do H2 localmente
+                        .requestMatchers("/h2-console/**").permitAll()
+
+                        // Protege todos os outros endpoints privados do sistema (DEVE SER O ÚLTIMO)
+                        .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
