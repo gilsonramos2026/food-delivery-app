@@ -126,6 +126,13 @@
             <version>2.8.3</version>
         </dependency>
 
+        <!-- Spring WebSocket para mensageria e chat em tempo real -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>com.stripe</groupId>
             <artifactId>stripe-java</artifactId>
