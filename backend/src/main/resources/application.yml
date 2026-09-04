@@ -1,0 +1,66 @@
+spring:
+  profiles:
+    active: dev # Altere para 'prod' quando quiser conectar no PostgreSQL
+
+---
+# ?? CONFIGURAÇÃO DE DESENVOLVIMENTO (Banco H2 em Memória)
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:deliverydb;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY,VALUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# ? Customização do Swagger para o ambiente de Desenvolvimento
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true              # Ativa a interface visual no ambiente dev
+    operations-sorter: alpha   # Organiza os endpoints em ordem alfabética
+
+server:
+  port: 8080
+
+---
+# ? CONFIGURAÇÃO DE PRODUÇÃO (Banco PostgreSQL)
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://localhost:5432/delivery_db # Altere para o IP/Porta do seu banco
+    username: postgres
+    password: sua_senha_aqui
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # Em produção real, mude para 'validate' e use Flyway/Liquibase
+    show-sql: false
+
+# ? Segurança para produção: Desativa o Swagger visual para que público externo não veja
+springdoc:
+  swagger-ui:
+    enabled: false
+
+server:
+  port: 8081
