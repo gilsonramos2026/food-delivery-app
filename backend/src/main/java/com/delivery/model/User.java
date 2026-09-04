@@ -28,6 +28,7 @@ public class User {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @NotBlank(message = "O e-mail é obrigatório")
     @Email(message = "Formato de e-mail inválido")
     @Column(nullable = false, unique = true, length = 180)
     private String email;
@@ -37,6 +38,10 @@ public class User {
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+    @NotBlank(message = "O telefone é obrigatório")
+    @Column(nullable = false, unique = true, length = 20)
+    private String phone;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
